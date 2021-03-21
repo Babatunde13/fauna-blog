@@ -9,6 +9,13 @@ export default function HomePage() {
       {/* <header className="App-header"> */}
         <Navbar />
       {/* </header> */}
+      {console.log(localStorage.getItem('user'))}
+      {/* User Profile */}
+      {
+       localStorage.getItem('user') ?
+        <div>Welcome {localStorage.getItem('user').name}</div> :
+        ''
+      }
       <div className="grid grid-rows-2 md:grid-rows-6 ">
         {blogs.map(ele => 
           <BlogPreview 

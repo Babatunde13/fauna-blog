@@ -6,7 +6,6 @@ import SignUp from './screens/SignUp'
 import NotFound from './screens/NotFound'
 import Blog from './screens/Blog'
 import Markdown from "./markdown";
-import './App.css'
 
 const blogs = require('./data.json')
 console.log(blogs)
