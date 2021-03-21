@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import "tailwindcss/dist/tailwind.css";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import HomePage from './screens/HomePage'
+import SignIn from './screens/SignIn'
+import SignUp from './screens/SignIn'
+import NotFound from './screens/NotFound'
+import Blog from './screens/Blog'
+import Markdown from "./markdown";
+import './App.css'
+
+const blogs = require('./data.json')
+console.log(blogs)
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+      <Route exact path="/" component={HomePage} />
+      <Route exact path="/blogs" component={HomePage} />
+      <Route path="/blog/:id" component={Blog} />
+      <Route exact path="/signin/" component={SignIn} />
+      <Route exact path="/signup/" component={SignUp} />
+      <Route exact path="/markdown/" component={Markdown} />
+      <Route exact path="/signout/" />
+      <Route exact path="*" component={NotFound} />
+      </Switch>
+    </Router>
   );
 }
 
