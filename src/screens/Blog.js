@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
 
-export default function Blog({id, title, author, }) {
+const Blog = ({id, title, author, body, avatar, upvote, downvote}) => {
   const uri = window.location.href.split('/').slice(-1)[0]
   console.log(uri)
   return (
@@ -11,3 +11,5 @@ export default function Blog({id, title, author, }) {
     </div>
   )
 }
+
+export default Blog
