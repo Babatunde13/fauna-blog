@@ -1,9 +1,9 @@
 import faunadb, {query as q} from 'faunadb'
 import bcrypt from 'bcryptjs'
-import { use } from 'marked'
-const client = new faunadb.Client({secret: ''})
 
-const createUser = (name, email, username, password) => {
+const client = new faunadb.Client({secret: 'fnAEE4MzScACB_lcbBM3VSZvjziecYEDHbtgcoDA'})
+
+export const createUser = (name, email, username, password) => {
   let data = client.query(
     q.Create(
       q.Collection('users'),
@@ -12,7 +12,7 @@ const createUser = (name, email, username, password) => {
           name, 
           email, 
           username, 
-          password: bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+          password: bcrypt.hashSync(password)
         }
       }
     )
@@ -21,7 +21,7 @@ const createUser = (name, email, username, password) => {
   return data.data
 }
 
-const loginUser = (email, password) => {
+export const loginUser = (email, password) => {
   let user 
   client.query(
     q.Get(
@@ -30,7 +30,7 @@ const loginUser = (email, password) => {
   ).then(
     res => {
       res.data.id = res.ref.id()
-      user = res.user
+      user = res.data
     }
   )
   if (bcrypt.compareSync(password, user.data.password)) {
@@ -38,10 +38,84 @@ const loginUser = (email, password) => {
   }
 }
 
-const createPost = (title, body, upvote, downvote, author) => {
-
+export const createPost = (title, body, avatar, upvote, downvote, views, author) => {
+  let data = client.query(
+    q.Create(
+      q.Collection('blogs'),
+      {
+        data: {
+          title, 
+          body, 
+          upvote: 0,
+          downvote: 0,
+          views: 0,
+          author,
+          avatar
+        }
+      }
+    )
+  )
+  data.data.id = data.ref.id()
+  return data.data
 }
 
-module.exports = {
-  createUser, loginUser
+export const getPost = id => {
+  let blog
+  client.query(
+    q.Get(q.Ref(q.Collection('blog'), id))
+  )
+  .then(res => {
+    console.log(res)
+    res.data.id = res.ref.id()
+    blog = res.data
+  })
+  return blog
+}
+
+export const upvotePost = (upvote, id) => {
+  let blog
+  client.query(
+    q.Update(
+      q.Ref(q.Collection('blog'), id),
+      {data: {upvote}}
+    )
+  )
+  .then(res => {
+    console.log(res)
+    res.data.id = res.ref.id()
+    blog = res.data
+  })
+  return blog
+}
+
+export const downvotePost = (downvote, id) => {
+  let blog
+  client.query(
+    q.Update(
+      q.Ref(q.Collection('blog'), id),
+      {data: {downvote}}
+    )
+  )
+  .then(res => {
+    console.log(res)
+    res.data.id = res.ref.id()
+    blog = res.data
+  })
+  return blog
+}
+
+export const viewCount = (views, id) => {
+  let blog
+  client.query(
+    q.Update(
+      q.Ref(q.Collection('blog'), id),
+      {data: {views}}
+    )
+  )
+  .then(res => {
+    console.log(res)
+    res.data.id = res.ref.id()
+    blog = res.data
+  })
+  return blog
 }

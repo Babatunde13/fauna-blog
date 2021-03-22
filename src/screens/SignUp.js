@@ -1,5 +1,6 @@
 import {useRef} from 'react'
 import Navbar from "../components/Navbar";
+import { createUser } from '../models';
 
 
 export default function SignIn() {
@@ -8,7 +9,7 @@ export default function SignIn() {
   const password = useRef()
   const username = useRef('username')
   const confirm_password = useRef()
-
+  console.log(name)
   const LoginUser = (e) => {
     e.preventDefault()
     const body = {
@@ -18,12 +19,18 @@ export default function SignIn() {
       password: password.current.value,
       confirm_password: confirm_password.current.value
     }
+    if (password === confirm_password && name.current.value && password.current.value && email.current.value && username.current.value ) {
+      const user = createUser(name, email, username, password)
+      localStorage.setItem('user', user)
+      window.location.assign('/')
+      alert('User created sucessfully, signing you in...')
+    } else if (!name || !email || !username || !password) {
+      alert('You didn\'t pass any value')
+    } else {
+      alert('Password and confirm password fields must be equal')
+    }
 
     console.log(body)
-    // Handle signup logic
-    // 
-    localStorage.setItem('user', body)
-    window.location.assign('/')
   }
   
   return (
