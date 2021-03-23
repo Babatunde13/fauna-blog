@@ -1,8 +1,12 @@
 import {useRef} from 'react'
 import Navbar from "../components/Navbar";
+import {loginUser} from '../models'
 
 
 export default function SignIn() {
+  if (localStorage.getItem('user')) {
+    window.location.assign('/')
+  }
   const email = useRef('')
   const password = useRef('')
 
@@ -15,8 +19,9 @@ export default function SignIn() {
 
     console.log(body)
     // Handle login logic
-    // 
-    localStorage.setItem('user', body)
+    const user = loginUser(body.email, body.password)
+    console.log(user)
+    localStorage.setItem('user', JSON.stringify(user))
     window.location.assign('/')
   }
   return (

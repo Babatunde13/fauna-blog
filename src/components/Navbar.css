@@ -47,7 +47,9 @@
   color: var(--secondary-color);
   border-radius: 8px;
   width: 197px;
-  height: 70px;
+  height: 70px;color: aquamarine;
+  background-color: blue;
+  margin: 10px;
 }
 
 .navbar__right > .navbar__btn:hover {
@@ -55,4 +57,6 @@
   background-color: var(--secondary-color);
   border: 1px solid var(--primary-color);
   transition: all 0.3s ease-in-out 0s;
+  color: aquamarine;
+  background-color: blue;
 }

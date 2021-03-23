@@ -19,7 +19,7 @@ function App() {
       <Route path="/blog/:id" component={Blog} />
       <Route exact path="/signin/" component={SignIn} />
       <Route exact path="/signup/" component={SignUp} />
-      <Route exact path="/markdown/" component={Markdown} />
+      <Route exact path="/create/" component={Markdown} />
       <Route exact path="/signout/" />
       <Route exact path="*" component={NotFound} />
       </Switch>

@@ -1,27 +1,29 @@
 import {useRef} from 'react'
 import Navbar from "../components/Navbar";
 import { createUser } from '../models';
-
+import {hash} from 'bcryptjs'
 
 export default function SignIn() {
+  if (localStorage.getItem('user')) {
+    window.location.assign('/')
+  }
   const name= useRef()
   const email = useRef()
   const password = useRef()
-  const username = useRef('username')
+  const username = useRef()
   const confirm_password = useRef()
-  console.log(name)
-  const LoginUser = (e) => {
+  const LoginUser = async (e) => {
     e.preventDefault()
     const body = {
       email: email.current.value,
       name: name.current.value,
       username: username.current.value,
-      password: password.current.value,
-      confirm_password: confirm_password.current.value
+      password: password.current.value
     }
-    if (password === confirm_password && name.current.value && password.current.value && email.current.value && username.current.value ) {
-      const user = createUser(name, email, username, password)
-      localStorage.setItem('user', user)
+    if (body.name && body.password && body.email && body.username && body.password === confirm_password.current.value) {
+      body.password = await hash(body.password, 10)
+      const user = createUser(body.name, body.email, body.username, body.password)
+      localStorage.setItem('user', JSON.stringify(user))
       window.location.assign('/')
       alert('User created sucessfully, signing you in...')
     } else if (!name || !email || !username || !password) {
@@ -41,7 +43,7 @@ export default function SignIn() {
         <div>
           <img className="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create An Account your account
+            Create your account
           </h2>
           
         </div>

@@ -1,9 +1,10 @@
 import faunadb, {query as q} from 'faunadb'
 import bcrypt from 'bcryptjs'
+import {v4} from 'uuid'
 
 const client = new faunadb.Client({secret: 'fnAEE4MzScACB_lcbBM3VSZvjziecYEDHbtgcoDA'})
 
-export const createUser = (name, email, username, password) => {
+export  const createUser = (name, email, username, password) => {
   let data = client.query(
     q.Create(
       q.Collection('users'),
@@ -12,51 +13,71 @@ export const createUser = (name, email, username, password) => {
           name, 
           email, 
           username, 
-          password: bcrypt.hashSync(password)
+          password,
+          id: v4()
         }
       }
     )
   )
-  data.data.id = data.ref.id()
   return data.data
 }
 
 export const loginUser = (email, password) => {
   let user 
-  client.query(
-    q.Get(
-      q.Match(q.Index('users_by_email'), email)
+  try {
+    client.query(
+      q.Get(
+        q.Match(q.Index('user_by_email'), email)
+      )
+    ).then(
+      res => {
+        console.log(res)
+        user = res.data
+        console.log(user)
+      }
     )
-  ).then(
-    res => {
-      res.data.id = res.ref.id()
-      user = res.data
-    }
-  )
-  if (bcrypt.compareSync(password, user.data.password)) {
-    return user
+    if (bcrypt.compareSync(password, user.password)) return user
+    else return
+  } catch (error) {
+    console.error(error)
+    return
   }
 }
 
-export const createPost = (title, body, avatar, upvote, downvote, views, author) => {
+export const createPost = (title, body, avatar, author, tags) => {
   let data = client.query(
     q.Create(
       q.Collection('blogs'),
       {
         data: {
+          id: v4(),
           title, 
           body, 
           upvote: 0,
           downvote: 0,
           views: 0,
           author,
-          avatar
+          avatar,
+          tags
         }
       }
     )
   )
-  data.data.id = data.ref.id()
   return data.data
+}
+
+export const getPosts = () => {
+  let blog
+  client.query(
+    q.Map(
+      q.Paginate(q.Documents(q.Collection('blogs'))),
+      q.Lambda(x => q.Get(x))
+    )).then(
+    res => {
+      blog = res.data
+    }
+  )
+  return blog
 }
 
 export const getPost = id => {
