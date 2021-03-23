@@ -57,7 +57,7 @@ function Navbar() {
             Blogs
           </span>
         </Link>
-        <DynamicSignup isLoggedIn={localStorage.getItem('user')} />
+        <DynamicSignup isLoggedIn={JSON.parse(localStorage.getItem('user'))} />
       </div>
     </div>
   );

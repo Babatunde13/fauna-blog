@@ -1,7 +1,7 @@
-import marked from 'marked'
+// import marked from 'marked'
 import {useState, useRef} from 'react'
 import Navbar from './components/Navbar'
-import {createPost} from './models'
+// import {createPost} from './models'
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
  
@@ -11,10 +11,10 @@ export default function MarkdownInput() {
   const title = useRef('')
   const handleCreate = () => {
     console.log(content, tags.current.value, title.current.value)
-    // createPost(title, content, '', localStorage.getItem('user'), tags)
+    // createPost(title, content, '', JSON.parse(localStorage.getItem('user')), tags)
     // window.location.assign('/')
   }
-  const __html = marked(typeof content !== String? '': content, { sanitize: true })
+  // const __html = marked(typeof content !== String? '': content, { sanitize: true })
 
   return (
     <>
@@ -28,22 +28,22 @@ export default function MarkdownInput() {
         <input style={{border: '1px solid black'}} ref={tags} type="text"  />
       </div>
     <div className="App">
-    <h2>Body Of Your Post</h2>
-        <CKEditor
-          editor={ ClassicEditor }
-          data={content}
-          onReady={ editor => {
-              // You can store the "editor" and use when it is needed.
-              console.log( 'Editor is ready to use!', editor );
-          } }
-          onChange={ ( event, editor ) => {
-              const data = editor.getData();
-              console.log(event)
-              console.log(editor)
-              console.log(data);
-              setContent(data)
-          } }
-        />
+      <h2>Body Of Your Post</h2>
+      <CKEditor
+        editor={ ClassicEditor }
+        data={content}
+        onReady={ editor => {
+            // You can store the "editor" and use when it is needed.
+            console.log( 'Editor is ready to use!', editor );
+        } }
+        onChange={ ( event, editor ) => {
+            const data = editor.getData();
+            console.log(event)
+            console.log(editor)
+            console.log(data);
+            setContent(data)
+        } }
+      />
     </div>
     <button onClick={handleCreate}>Post</button>
     </>

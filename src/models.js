@@ -68,26 +68,29 @@ export const createPost = (title, body, avatar, author, tags) => {
 
 export const getPosts = () => {
   let blog
-  client.query(
-    q.Map(
-      q.Paginate(q.Documents(q.Collection('blogs'))),
-      q.Lambda(x => q.Get(x))
-    )).then(
-    res => {
+  try {
+    client.query(
+      q.Map(
+        q.Paginate(q.Documents(q.Collection('blogs'))),
+        q.Lambda(x => q.Get(x))
+      )
+    ).then(res => {
       blog = res.data
-    }
-  )
+    })
+  } catch (error) {
+    console.error(error)
+  }
   return blog
 }
 
 export const getPost = id => {
   let blog
   client.query(
-    q.Get(q.Ref(q.Collection('blog'), id))
+    q.Get(q.Ref(q.Collection('blogs'), id))
   )
   .then(res => {
     console.log(res)
-    res.data.id = res.ref.id()
+    res.data.id = JSON.stringify(res.ref)['@ref'].id
     blog = res.data
   })
   return blog
@@ -97,13 +100,12 @@ export const upvotePost = (upvote, id) => {
   let blog
   client.query(
     q.Update(
-      q.Ref(q.Collection('blog'), id),
+      q.Ref(q.Collection('blogs'), id),
       {data: {upvote}}
     )
   )
   .then(res => {
     console.log(res)
-    res.data.id = res.ref.id()
     blog = res.data
   })
   return blog
@@ -119,7 +121,6 @@ export const downvotePost = (downvote, id) => {
   )
   .then(res => {
     console.log(res)
-    res.data.id = res.ref.id()
     blog = res.data
   })
   return blog
@@ -135,7 +136,6 @@ export const viewCount = (views, id) => {
   )
   .then(res => {
     console.log(res)
-    res.data.id = res.ref.id()
     blog = res.data
   })
   return blog
