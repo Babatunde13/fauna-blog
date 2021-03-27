@@ -1,14 +1,14 @@
 import React from "react";
 import "./Navbar.css";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 const DynamicSignup = ({isLoggedIn}) => {
   const handleCreateBtn = () => {
-    
+    <Redirect to ="/create"/>
   }
 
   const handleSignout = () => {
-    window.localStorage.removeItem('user')
+    localStorage.removeItem('user')
     window.location.assign('/')
   }
   if (isLoggedIn) {
@@ -57,7 +57,7 @@ function Navbar() {
             Blogs
           </span>
         </Link>
-        <DynamicSignup isLoggedIn={JSON.parse(localStorage.getItem('user'))} />
+        <DynamicSignup isLoggedIn={localStorage.getItem('user')? true: false} />
       </div>
     </div>
   );

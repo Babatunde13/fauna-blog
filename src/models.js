@@ -1,8 +1,11 @@
 import faunadb, {query as q} from 'faunadb'
 import bcrypt from 'bcryptjs'
 import {v4} from 'uuid'
+import dotenv from 'dotenv'
 
-const client = new faunadb.Client({secret: 'fnAEE4MzScACB_lcbBM3VSZvjziecYEDHbtgcoDA'})
+dotenv.config()
+// process.env.REACT_APP_FAUNA_KEY
+const client = new faunadb.Client({secret: 'fnAEFOklEzACBUr_aud8cXBZsZOkyq_2jhgxd3Bx'})
 
 export  const createUser = (name, email, username, password) => {
   let data = client.query(
@@ -50,7 +53,6 @@ export const createPost = (title, body, avatar, author, tags) => {
       q.Collection('blogs'),
       {
         data: {
-          id: v4(),
           title, 
           body, 
           upvote: 0,
@@ -63,37 +65,25 @@ export const createPost = (title, body, avatar, author, tags) => {
       }
     )
   )
+  data.data.id = data.Ref.id
   return data.data
 }
 
-export const getPosts = () => {
-  let blog
-  try {
-    client.query(
-      q.Map(
-        q.Paginate(q.Documents(q.Collection('blogs'))),
-        q.Lambda(x => q.Get(x))
-      )
-    ).then(res => {
-      blog = res.data
-    })
-  } catch (error) {
-    console.error(error)
-  }
-  return blog
+export const getPosts = async () => {
+  let allBlogs = await client.query(
+    q.Map(
+      q.Paginate(q.Documents(q.Collection("blogs"))),
+      q.Lambda("X", q.Get(q.Var("X")))
+    )
+  )
+  return allBlogs.data
 }
 
-export const getPost = id => {
-  let blog
-  client.query(
+export const getPost = async id => {
+  let blog = await client.query(
     q.Get(q.Ref(q.Collection('blogs'), id))
   )
-  .then(res => {
-    console.log(res)
-    res.data.id = JSON.stringify(res.ref)['@ref'].id
-    blog = res.data
-  })
-  return blog
+  return blog.data
 }
 
 export const upvotePost = (upvote, id) => {
@@ -140,3 +130,5 @@ export const viewCount = (views, id) => {
   })
   return blog
 }
+
+// getPosts()

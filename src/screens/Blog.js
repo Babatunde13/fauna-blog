@@ -1,11 +1,11 @@
 // import upvote and downvote icons 
-import {Redirect} from 'react-router-dom'
+import {Redirect, useParams} from 'react-router-dom'
 import {useEffect, useState} from 'react'
 import Navbar from '../components/Navbar'
-import {getPost, upvotePost, downvotePost, viewCount} from '../models'
+import {getPost, upvotePost, downvotePost, /*viewCount*/} from '../models'
 
 const Blog = () => {
-  const id = window.location.href.split('/').slice(-1)[0]
+  const {id} = useParams()
   const [blogData, setBlogData] = useState({})
 
   const handleUpvote = e => {
@@ -19,10 +19,25 @@ const Blog = () => {
   }
   // fetch data from the server
   useEffect(() => {
-    setBlogData(getPost(id))
-    console.log(blogData)
-    if (!blogData) <Redirect to="/" />
-  }, [id, blogData])
+    async function fetchBlog() {
+      // You can await here
+      let data = await getPost(id)
+      console.log(data)
+      if (data) {
+        setBlogData(data)
+      } else {
+        <Redirect to="*" />
+      }
+    }
+    fetchBlog();
+  }, [])
+  // useEffect(() => {
+  //   let data = getPost(id)
+  //   console.log(data)
+  //   setBlogData(data)
+  //   console.log('blog', blogData)
+  //   if (!blogData) <Redirect to="*" />
+  // }, [id])
 
   // useEffect(() => {
   //   setBlogData(viewCount(blogData.views, blogData.id))
@@ -30,11 +45,11 @@ const Blog = () => {
 
   return (
     <div>
-      {/* <Navbar />
+       <Navbar />
       Id of the blog is {id} <br />
-      <button value={blogData.upvote} onClick={handleUpvote}><img src="../components/upvote.png" alt=""/> {blogData.upvote}</button>
-      <button value={blogData.downvote} onClick={handleDownvote}>Downvote: {blogData.downvote}</button> */}
-      {JSON.stringify(blogData)}
+      {/* <button value={blogData.data.upvote} onClick={handleUpvote}><img src="../components/upvote.png" alt=""/> {blogData.data.upvote}</button> */}
+      {/* <button value={blogData.data.downvote} onClick={handleDownvote}>Downvote: {blogData.data.downvote}</button>  */}
+      {/* {JSON.stringify(blogData.data)} */}
     </div>
   )
 }

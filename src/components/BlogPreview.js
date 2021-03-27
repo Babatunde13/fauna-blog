@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom'
 export default function BlogPreview({id, title, author, avatar, upvote, downvote}) {
   return (
     <div>
-      <Link to={"/blog/"+id}>
+      <Link to={"/blogs/"+id}>
         <img src={avatar} alt={title}/>
         {title}
       </Link>

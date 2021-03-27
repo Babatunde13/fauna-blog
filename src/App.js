@@ -7,9 +7,6 @@ import NotFound from './screens/NotFound'
 import Blog from './screens/Blog'
 import Markdown from "./markdown";
 
-const blogs = require('./data.json')
-console.log(blogs)
-
 function App() {
   return (
     <Router>

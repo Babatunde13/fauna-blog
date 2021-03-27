@@ -2,7 +2,8 @@ import "../screens/Signin.css";
 
 export default function Signout() {
   const handleClick = () => {
-    window.localStorage.removeItem('user')
+    console.log(JSON.parse(localStorage.getItem('user')))
+    localStorage.removeItem('user')
     window.location.assign('/')
   }
   return (
