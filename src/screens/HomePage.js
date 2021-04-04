@@ -13,23 +13,21 @@ export default function HomePage() {
     }
     fetchBlogs();
   }, [])
-  console.log(blogs)
   return (
-    <div className="App">
+    <div className="">
         <Navbar />
-        {localStorage.getItem('userId') ? <div>Hello {localStorage.getItem('username')} 👋 </div>: 'Hey there 👋 '}
         <hr/>
-      <div className="grid grid-rows-2 md:grid-rows-6 ">
+      <div className="row">
         {blogs.length > 0 ? blogs.map(blog => 
           <>
              <BlogPreview 
-            key={blog.ref.value.id}
-            id={blog.ref.value.id}
-            title={blog.data.title}
-            author={blog.data.author}
-            avatar={blog.data.avatar}
-            upvote={blog.data.upvote}
-            downvote={blog.data.downvote}/>
+              key={blog.ref.value.id}
+              id={blog.ref.value.id}
+              title={blog.data.title}
+              author={blog.data.author}
+              avatar={blog.data.avatar}
+              upvote={blog.data.upvote}
+              downvote={blog.data.downvote}/>
             <hr/>
           </>
         ): 'No blog has been created yet. Be the first to create'}

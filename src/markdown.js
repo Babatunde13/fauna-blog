@@ -4,7 +4,6 @@ import {createPost} from './models'
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {useHistory} from 'react-router-dom'
-
  
 export default function MarkdownInput() {
   const history = useHistory()
@@ -12,46 +11,43 @@ export default function MarkdownInput() {
   const tags = useRef('')
   const title = useRef('')
   const handleCreate = async () => {
-    console.log(content, tags.current.value.split(', '), title.current.value)
     await createPost(title.current.value, content, '', localStorage.getItem('userId'), tags.current.value.split(','))
+    alert('Blog post created successfully, signing you in...')
     history.push('/')
   }
 
   return (
     <>
     <Navbar />
-      <div>
+      <div className="form-group">
         <label htmlFor="upload">Upload avatar</label>
+        <input type="file" name="" id="" onChange={e => {console.log(e.target.files[0])}}/>
       </div>
-      <div>
+      <div className="form-group">
         <label htmlFor="title">Title</label>
-        <input style={{border: '1px solid black'}} ref={title} type="text" name="title" id=""/>
+        <input className="form-control form-control-lg" ref={title} type="text" name="title" id=""/>
       </div>
       <div>
         <label htmlFor="tags">Tags</label>
-        <input style={{border: '1px solid black'}} ref={tags} type="text"  />
+        <input className="form-control form-control-lg" ref={tags} type="text"  />
       </div>
-    <div className="App">
+    <div className="form-group">
       <h2>Body Of Your Post</h2>
       <CKEditor
-        height="100"
+      className="form-control-lg form-control h-100"
         editor={ ClassicEditor }
         data={content}
+        row={100}
         onReady={ editor => {
             // You can store the "editor" and use when it is needed.
-            console.log( 'Editor is ready to use!', editor );
         } }
         onChange={ ( event, editor ) => {
-          
             const data = editor.getData();
-            console.log(event)
-            console.log(editor)
-            console.log(data);
             setContent(data)
         } }
       />
     </div>
-    <button onClick={handleCreate}>Post</button>
+    <button className="btn btn-primary w-30" onClick={handleCreate}>Post</button>
     </>
   )
 }

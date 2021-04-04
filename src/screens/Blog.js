@@ -4,48 +4,52 @@ import {useEffect, useState} from 'react'
 import Navbar from '../components/Navbar'
 // import NotFound from './NotFound'
 import {getPost, upvotePost, downvotePost} from '../models'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 
 const Blog = () => {
   let upvote, downvote
   const {id} = useParams()
   const [blogData, setBlogData] = useState({})
 
-  const handleUpvote = e => {
+  const handleUpvote = async e => {
     upvote = blogData.upvote +1
-    upvotePost(upvote, id)
+    let blog = await upvotePost(upvote, id)
+    setBlogData(blog)
   }
 
-  const handleDownvote = e => {
+  const handleDownvote = async e => {
     downvote = blogData.downvote + 1
-    downvotePost(downvote, id)
+    let blog = await downvotePost(downvote, id)
+    setBlogData(blog)
   }
   // fetch data from the server
   useEffect(() => {
     async function fetchBlog() {
-      // You can await here
       let data = await getPost(id)
-      console.log('DaFa', data)
       setBlogData(data)
     }
     fetchBlog();
-  }, [upvote, downvote])
-
+  }, [id, blogData])
+console.log(blogData.author)
   return (
     <div>
        <Navbar />
       <h1>{blogData.title}</h1>
+      <span className="text-muted">{blogData.author && `Post by ${blogData.author.username}`} on {blogData.created__at}</span>
       <hr/>
       <div dangerouslySetInnerHTML={{__html: blogData.body}}></div>
       <hr/>
       <div>
         <button 
           onClick={handleUpvote}>
-            <img src="../components/upvote.png" alt="upvote"/>
-        </button>{blogData.upvote}
+            <FontAwesomeIcon icon={faThumbsUp} />
+        </button> {blogData.upvote}
+        <span style={{margin: "10px"}}></span>
         <button 
           onClick={handleDownvote}>
-            <img src="../components/downvote.png" alt="downvote"/>
-        </button> {blogData.downvote}
+           <FontAwesomeIcon icon={faThumbsDown} />
+        </button>{blogData.downvote}
       </div>
     </div>
   )

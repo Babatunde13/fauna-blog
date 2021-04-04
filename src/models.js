@@ -51,16 +51,17 @@ export const loginUser = async (email, password) => {
       q.Match(q.Index('user_by_email'), email)
     )
   )
-  if (userData.name && userData.name == "NotFound") return
-  user = userData.data
+  if (userData.name && userData.name === "NotFound") return
+  let user = userData.data
   user.id = userData.ref.value.id
   if (bcrypt.compareSync(password, user.password)) return user
   else return
 }
 
 export const createPost = async (title, body, avatar, authorId, tags) => {
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   let author = await getUser(authorId)
-  console.log(author)
+  const date = new Date()
   let data = await client.query(
     q.Create(
       q.Collection('blogs'),
@@ -70,6 +71,7 @@ export const createPost = async (title, body, avatar, authorId, tags) => {
           body, 
           upvote: 0,
           downvote: 0,
+          created__at: `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`,
           author: {
             name:author.name, 
             email: author.email, 
@@ -82,7 +84,6 @@ export const createPost = async (title, body, avatar, authorId, tags) => {
       }
     )
   )
-  console.log(data)
   data.data.id = data.ref.value.id
   if (author.blogIds) {
     client.query(
