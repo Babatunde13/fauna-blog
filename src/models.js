@@ -70,7 +70,8 @@ export const loginUser = (email, password) => {
 
 export const createPost = async (title, body, avatar, authorId, tags) => {
   let author = await getUser(authorId)
-  let data = client.query(
+  console.log(author)
+  let data = await client.query(
     q.Create(
       q.Collection('blogs'),
       {
@@ -79,8 +80,12 @@ export const createPost = async (title, body, avatar, authorId, tags) => {
           body, 
           upvote: 0,
           downvote: 0,
-          views: 0,
-          author,
+          author: {
+            name:author.name, 
+            email: author.email, 
+            id:author.id, 
+            username: author.username
+          },
           avatar,
           tags
         }
@@ -88,7 +93,7 @@ export const createPost = async (title, body, avatar, authorId, tags) => {
     )
   )
   console.log(data)
-  data.data.id = data.Ref.value.id
+  data.data.id = data.ref.value.id
   if (author.blogIds) {
     client.query(
       q.Update(
@@ -125,6 +130,7 @@ export const getPost = async id => {
 }
 
 export const upvotePost = (upvote, id) => {
+  console.log(upvote)
   let blog
   client.query(
     q.Update(
@@ -135,6 +141,7 @@ export const upvotePost = (upvote, id) => {
   .then(res => {
     console.log(res)
     blog = res.data
+    blog.id = res.ref.value.id
   })
   return blog
 }
@@ -143,7 +150,7 @@ export const downvotePost = (downvote, id) => {
   let blog
   client.query(
     q.Update(
-      q.Ref(q.Collection('blog'), id),
+      q.Ref(q.Collection('blogs'), id),
       {data: {downvote}}
     )
   )
@@ -153,20 +160,3 @@ export const downvotePost = (downvote, id) => {
   })
   return blog
 }
-
-export const viewCount = (views, id) => {
-  let blog
-  client.query(
-    q.Update(
-      q.Ref(q.Collection('blog'), id),
-      {data: {views}}
-    )
-  )
-  .then(res => {
-    console.log(res)
-    blog = res.data
-  })
-  return blog
-}
-
-// getPosts()

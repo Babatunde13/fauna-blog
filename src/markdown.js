@@ -11,15 +11,18 @@ export default function MarkdownInput() {
   const [content, setContent] = useState('Body of your article goes here...')
   const tags = useRef('')
   const title = useRef('')
-  const handleCreate = () => {
+  const handleCreate = async () => {
     console.log(content, tags.current.value.split(', '), title.current.value)
-    createPost(title.current.value, content, '', {name: 'Babatunde'}, tags.current.value.split(','))
+    await createPost(title.current.value, content, '', localStorage.getItem('userId'), tags.current.value.split(','))
     history.push('/')
   }
 
   return (
     <>
     <Navbar />
+      <div>
+        <label htmlFor="upload">Upload avatar</label>
+      </div>
       <div>
         <label htmlFor="title">Title</label>
         <input style={{border: '1px solid black'}} ref={title} type="text" name="title" id=""/>

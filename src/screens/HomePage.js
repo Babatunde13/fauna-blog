@@ -9,25 +9,29 @@ export default function HomePage() {
     async function fetchBlogs() {
       // You can await here
       let data = await getPosts()
-      console.log(data)
       setBlogs(data)
     }
     fetchBlogs();
   }, [])
+  console.log(blogs)
   return (
     <div className="App">
         <Navbar />
-        {localStorage.getItem('userId') && <div>Hello {localStorage.getItem('username')}</div>}
+        {localStorage.getItem('userId') ? <div>Hello {localStorage.getItem('username')} 👋 </div>: 'Hey there 👋 '}
+        <hr/>
       <div className="grid grid-rows-2 md:grid-rows-6 ">
-        {blogs.length > 0 ? blogs.map(ele => 
-           <BlogPreview 
-            key={ele.ref.id}
-            id={ele.ref.id}
-            title={ele.data.title}
-            author={ele.data.author}
-            avatar={ele.data.avatar}
-            upvote={ele.data.upvote}
-            downvote={ele.data.downvote}/>
+        {blogs.length > 0 ? blogs.map(blog => 
+          <>
+             <BlogPreview 
+            key={blog.ref.value.id}
+            id={blog.ref.value.id}
+            title={blog.data.title}
+            author={blog.data.author}
+            avatar={blog.data.avatar}
+            upvote={blog.data.upvote}
+            downvote={blog.data.downvote}/>
+            <hr/>
+          </>
         ): 'No blog has been created yet. Be the first to create'}
       </div>
     </div>
