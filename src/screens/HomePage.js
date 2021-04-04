@@ -17,13 +17,9 @@ export default function HomePage() {
   return (
     <div className="App">
         <Navbar />
-          {/* {
-          JSON.parse(localStorage.getItem('user')) ?
-            <div>Hey {JSON.parse(localStorage.getItem('user')).username} 👋</div> :
-            <div>Hey there! 👋</div>
-         } */}
+        {localStorage.getItem('userId') && <div>Hello {localStorage.getItem('username')}</div>}
       <div className="grid grid-rows-2 md:grid-rows-6 ">
-        {blogs && blogs.map(ele => 
+        {blogs.length > 0 ? blogs.map(ele => 
            <BlogPreview 
             key={ele.ref.id}
             id={ele.ref.id}
@@ -32,7 +28,7 @@ export default function HomePage() {
             avatar={ele.data.avatar}
             upvote={ele.data.upvote}
             downvote={ele.data.downvote}/>
-        )}
+        ): 'No blog has been created yet. Be the first to create'}
       </div>
     </div>
   );

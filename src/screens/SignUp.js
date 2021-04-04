@@ -1,11 +1,12 @@
 import {useRef} from 'react'
 import Navbar from "../components/Navbar";
 import { createUser } from '../models';
-import {hash} from 'bcryptjs'
+import {useHistory} from 'react-router-dom'
 
 export default function SignIn() {
+  const history = useHistory()
   if (localStorage.getItem('user')) {
-    window.location.assign('/')
+    history.push('/')
   }
   const name= useRef()
   const email = useRef()
@@ -21,11 +22,16 @@ export default function SignIn() {
       password: password.current.value
     }
     if (body.name && body.password && body.email && body.username && body.password === confirm_password.current.value) {
-      body.password = await hash(body.password, 10)
-      const user = createUser(body.name, body.email, body.username, body.password)
-      localStorage.setItem('user', JSON.stringify(user))
-      window.location.assign('/')
-      alert('User created sucessfully, signing you in...')
+      const user = await createUser(body.name, body.email, body.username, body.password)
+      if (!user) {
+        alert('Email has been chosen')
+      } else {
+        localStorage.setItem('userId', user.id)
+        localStorage.setItem('username', user.username)
+        localStorage.setItem('email', user.email)
+        history.push('/')
+        alert('User created sucessfully, signing you in...')
+      }
     } else if (!name || !email || !username || !password) {
       alert('You didn\'t pass any value')
     } else {

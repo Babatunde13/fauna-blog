@@ -1,11 +1,12 @@
 import {useRef} from 'react'
+import { useHistory } from 'react-router-dom';
 import Navbar from "../components/Navbar";
 import {loginUser} from '../models'
 
-
 export default function SignIn() {
-  if (localStorage.getItem('user')) {
-    window.location.assign('/')
+  let history = useHistory()
+  if (localStorage.getItem('userId')) {
+  history.push('/') 
   }
   const email = useRef('')
   const password = useRef('')
@@ -16,13 +17,16 @@ export default function SignIn() {
       email: email.current.value,
       password: password.current.value
     }
-
-    console.log(body)
     // Handle login logic
     const user = loginUser(body.email, body.password)
-    console.log(user)
-    localStorage.setItem('user', JSON.stringify(user))
-    window.location.assign('/')
+    if (user) {
+      localStorage.setItem('userId', user.id)
+      localStorage.setItem('username', user.username)
+      localStorage.setItem('email', user.email)
+      history.push('/')
+    } else {
+      alert('Invalid email or password')
+    }
   }
   return (
    <>

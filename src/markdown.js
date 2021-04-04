@@ -3,15 +3,18 @@ import Navbar from './components/Navbar'
 import {createPost} from './models'
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import {useHistory} from 'react-router-dom'
+
  
 export default function MarkdownInput() {
+  const history = useHistory()
   const [content, setContent] = useState('Body of your article goes here...')
   const tags = useRef('')
   const title = useRef('')
   const handleCreate = () => {
     console.log(content, tags.current.value.split(', '), title.current.value)
     createPost(title.current.value, content, '', {name: 'Babatunde'}, tags.current.value.split(','))
-    window.location.assign('/')
+    history.push('/')
   }
 
   return (

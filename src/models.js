@@ -1,28 +1,49 @@
 import faunadb, {query as q} from 'faunadb'
 import bcrypt from 'bcryptjs'
-import {v4} from 'uuid'
 import dotenv from 'dotenv'
 
 dotenv.config()
 // process.env.REACT_APP_FAUNA_KEY
 const client = new faunadb.Client({secret: 'fnAEFOklEzACBUr_aud8cXBZsZOkyq_2jhgxd3Bx'})
 
-export  const createUser = (name, email, username, password) => {
-  let data = client.query(
-    q.Create(
-      q.Collection('users'),
-      {
-        data: {
-          name, 
-          email, 
-          username, 
-          password,
-          id: v4()
+export  const createUser = async (name, email, username, password) => {
+  password = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+  let data
+  try {
+    data= await client.query(
+      q.Create(
+        q.Collection('users'),
+        {
+          data: {
+            name, 
+            email, 
+            username, 
+            password
+          }
         }
-      }
+      )
     )
-  )
-  return data.data
+    if (data.name === 'BadRequest') return
+  } catch (error) {
+    console.log(error)
+    return 
+  }
+  const user = data.data
+  user.id = data.ref.value.id
+  return user
+}
+
+export const getUser = async (userId) => {
+  try {
+    const user = await client.query(
+      q.Get(
+        q.Ref(q.Collection('users'), userId)
+      )
+    )
+    return user.data
+  } catch {
+    return
+  }
 }
 
 export const loginUser = (email, password) => {
@@ -32,22 +53,23 @@ export const loginUser = (email, password) => {
       q.Get(
         q.Match(q.Index('user_by_email'), email)
       )
-    ).then(
-      res => {
-        console.log(res)
+    ).then(res => {
         user = res.data
-        console.log(user)
-      }
-    )
-    if (bcrypt.compareSync(password, user.password)) return user
-    else return
+        if (user.name === 'NotFound') return
+        else if (bcrypt.compareSync(password, user.password)) {
+          user.id = res.ref.value.id 
+        } 
+        else return
+      })
   } catch (error) {
-    console.error(error)
+    console.log(error)
     return
   }
+  return user
 }
 
-export const createPost = (title, body, avatar, author, tags) => {
+export const createPost = async (title, body, avatar, authorId, tags) => {
+  let author = await getUser(authorId)
   let data = client.query(
     q.Create(
       q.Collection('blogs'),
@@ -65,7 +87,22 @@ export const createPost = (title, body, avatar, author, tags) => {
       }
     )
   )
-  data.data.id = data.Ref.id
+  data.data.id = data.Ref.value.id
+  if (author.blogIds) {
+    client.query(
+      q.Update(
+        q.Ref(q.Collection('users'), authorId), 
+        {data: [...author.blogIds, data.data.id]}
+      )
+    )
+  } else {
+    client.query(
+      q.Update(
+        q.Ref(q.Collection('users'), authorId), 
+        {data: [data.data.id]}
+      )
+    )
+  }
   return data.data
 }
 
