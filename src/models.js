@@ -3,8 +3,7 @@ import bcrypt from 'bcryptjs'
 import dotenv from 'dotenv'
 
 dotenv.config()
-// process.env.REACT_APP_FAUNA_KEY
-const client = new faunadb.Client({secret: 'fnAEFOklEzACBUr_aud8cXBZsZOkyq_2jhgxd3Bx'})
+const client = new faunadb.Client({secret: process.env.REACT_APP_FAUNA_KEY})
 
 export  const createUser = async (name, email, username, password) => {
   password = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
@@ -46,26 +45,17 @@ export const getUser = async (userId) => {
   }
 }
 
-export const loginUser = (email, password) => {
-  let user 
-  try {
-    client.query(
-      q.Get(
-        q.Match(q.Index('user_by_email'), email)
-      )
-    ).then(res => {
-        if (res.name === 'NotFound') return
-        else {
-          user = res.data
-          if (bcrypt.compareSync(password, user.password)) {
-          user.id = res.ref.value.id 
-        } else return
-        }
-      })
-  } catch (error) {
-    return
-  }
-  return user
+export const loginUser = async (email, password) => {
+  let userData = await client.query(
+    q.Get(
+      q.Match(q.Index('user_by_email'), email)
+    )
+  )
+  if (userData.name && userData.name == "NotFound") return
+  user = userData.data
+  user.id = userData.ref.value.id
+  if (bcrypt.compareSync(password, user.password)) return user
+  else return
 }
 
 export const createPost = async (title, body, avatar, authorId, tags) => {
@@ -109,6 +99,7 @@ export const createPost = async (title, body, avatar, authorId, tags) => {
       )
     )
   }
+  data.data.id = data.ref.value.id
   return data.data
 }
 
@@ -126,37 +117,28 @@ export const getPost = async id => {
   let blog = await client.query(
     q.Get(q.Ref(q.Collection('blogs'), id))
   )
+  blog.data.id = blog.ref.value.id
   return blog.data
 }
 
-export const upvotePost = (upvote, id) => {
-  console.log(upvote)
-  let blog
-  client.query(
+export const upvotePost = async (upvote, id) => {
+  let blog = await client.query(
     q.Update(
       q.Ref(q.Collection('blogs'), id),
       {data: {upvote}}
     )
   )
-  .then(res => {
-    console.log(res)
-    blog = res.data
-    blog.id = res.ref.value.id
-  })
-  return blog
+  blog.data.id = blog.ref.value.id
+  return blog.data
 }
 
-export const downvotePost = (downvote, id) => {
-  let blog
-  client.query(
-    q.Update(
-      q.Ref(q.Collection('blogs'), id),
-      {data: {downvote}}
+export const downvotePost = async (downvote, id) => {
+  let blog = await client.query(
+      q.Update(
+        q.Ref(q.Collection('blogs'), id),
+        {data: {downvote}}
+      )
     )
-  )
-  .then(res => {
-    console.log(res)
-    blog = res.data
-  })
-  return blog
+  blog.data.id = blog.ref.value.id
+  return blog.data
 }
