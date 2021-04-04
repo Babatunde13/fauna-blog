@@ -54,15 +54,15 @@ export const loginUser = (email, password) => {
         q.Match(q.Index('user_by_email'), email)
       )
     ).then(res => {
-        user = res.data
-        if (user.name === 'NotFound') return
-        else if (bcrypt.compareSync(password, user.password)) {
+        if (res.name === 'NotFound') return
+        else {
+          user = res.data
+          if (bcrypt.compareSync(password, user.password)) {
           user.id = res.ref.value.id 
-        } 
-        else return
+        } else return
+        }
       })
   } catch (error) {
-    console.log(error)
     return
   }
   return user
@@ -87,19 +87,20 @@ export const createPost = async (title, body, avatar, authorId, tags) => {
       }
     )
   )
+  console.log(data)
   data.data.id = data.Ref.value.id
   if (author.blogIds) {
     client.query(
       q.Update(
         q.Ref(q.Collection('users'), authorId), 
-        {data: [...author.blogIds, data.data.id]}
+        {data: {blogIds: [data.data.id, ...author.blogIds]}}
       )
     )
   } else {
     client.query(
       q.Update(
         q.Ref(q.Collection('users'), authorId), 
-        {data: [data.data.id]}
+        {data: {blogIds: [data.data.id]}}
       )
     )
   }

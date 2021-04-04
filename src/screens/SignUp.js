@@ -30,7 +30,7 @@ export default function SignIn() {
         localStorage.setItem('username', user.username)
         localStorage.setItem('email', user.email)
         history.push('/')
-        alert('User created sucessfully, signing you in...')
+        alert('Account created sucessfully, signing you in...')
       }
     } else if (!name || !email || !username || !password) {
       alert('You didn\'t pass any value')
