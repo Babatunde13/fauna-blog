@@ -1,14 +1,10 @@
-// import upvote and downvote icons 
-import { useHistory, useParams} from 'react-router-dom'
+import { useParams} from 'react-router-dom'
 import {useEffect, useState} from 'react'
-import Navbar from '../components/Navbar'
-// import NotFound from './NotFound'
 import {getPost, upvotePost, downvotePost} from '../models'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 
 const Blog = () => {
-  const history = useHistory()
   const {id} = useParams()
   const [blogData, setBlogData] = useState({})
 
@@ -29,11 +25,8 @@ const Blog = () => {
     }
     fetchBlog();
   }, [id, blogData])
-console.log(blogData.author)
   return (
-    {blogData.name === "NotFound" ? 
     <div>
-      <Navbar />
       <h1>{blogData.title}</h1>
       <span className="text-muted">{blogData.author && `Post by ${blogData.author.username}`} on {blogData.created__at}</span>
       <hr/>
@@ -50,8 +43,8 @@ console.log(blogData.author)
             <FontAwesomeIcon icon={faThumbsDown} />
         </button>{blogData.downvote}
       </div>
-    </div>: 
-    "Blog not found"}
+    </div>
+    // "Blog not found"}
   )
 }
 

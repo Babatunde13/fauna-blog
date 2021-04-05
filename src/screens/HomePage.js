@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import BlogPreview from '../components/BlogPreview'
-import Navbar from '../components/Navbar';
 import {getPosts} from '../models'
 
 export default function HomePage() {
@@ -15,7 +14,6 @@ export default function HomePage() {
   }, [])
   return (
     <div className="">
-        <Navbar />
         <hr/>
       <div className="row">
         {blogs.length > 0 ? blogs.map(blog => 
@@ -28,7 +26,6 @@ export default function HomePage() {
               avatar={blog.data.avatar}
               upvote={blog.data.upvote}
               downvote={blog.data.downvote}/>
-            <hr/>
           </>
         ): 'No blog has been created yet. Be the first to create'}
       </div>

@@ -24,7 +24,6 @@ export  const createUser = async (name, email, username, password) => {
     )
     if (data.name === 'BadRequest') return
   } catch (error) {
-    console.log(error)
     return 
   }
   const user = data.data

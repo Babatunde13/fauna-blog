@@ -1,5 +1,4 @@
 import {useRef} from 'react'
-import Navbar from "../components/Navbar";
 import { createUser } from '../models';
 import {useHistory} from 'react-router-dom'
 
@@ -24,7 +23,7 @@ export default function SignIn() {
     if (body.name && body.password && body.email && body.username && body.password === confirm_password.current.value) {
       const user = await createUser(body.name, body.email, body.username, body.password)
       if (!user) {
-        alert('Email has been chosen')
+        alert('Email or username has been chosen')
       } else {
         localStorage.setItem('userId', user.id)
         localStorage.setItem('username', user.username)
@@ -42,32 +41,31 @@ export default function SignIn() {
   }
   
   return (
-    <>
-      <Navbar />
-      <form className="center form-check">
-        <div class="form-group">
-          <label for="exampleInputEmail1">Name</label>
-          <input style={{maxWidth: '200px'}} ref={name} type="text" class="form-control" aria-describedby="emailHelp" placeholder="Enter Name" />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
-          <input style={{maxWidth: '200px'}} ref={email} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
-          <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-        </div>
-        <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
-          <input ref={username} style={{maxWidth: '200px'}} type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input ref={password} style={{maxWidth: '200px'}} type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
-        </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input ref={confirm_password} style={{maxWidth: '200px'}} type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
-        </div>
-        <button onClick={LoginUser}  type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    </>
+    <form className="form-horizontal">
+      <div className="form-group">
+        <label className="control-label col-sm-4">Name: </label>
+        <input ref={name} type="text" className="form-control mx-md-3 col-sm-4" placeholder="Enter Name" />
+      </div>
+      <div className="form-group">
+        <label className="control-label col-sm-4">Email address</label>
+        <input ref={email} type="email" className="form-control mx-md-3 col-sm-4" placeholder="Enter email" />
+      </div>
+      <div className="form-group">
+        <label className="control-label col-sm-4">Username: </label>
+        <input ref={username} type="text" className="form-control mx-md-3 col-sm-4" placeholder="Enter username" />
+      </div>
+      <div className="form-group">
+        <label className="control-label col-sm-4">Password</label>
+        <input ref={password} type="password" className="form-control mx-md-3 col-sm-4"  placeholder="Password" />
+      </div>
+      <div className="form-group">
+        <label className="control-label col-sm-4">Confirm Password</label>
+        <input ref={confirm_password} type="password" className="form-control mx-md-3 col-sm-4" placeholder="Password" />
+      </div>
+      <div className="form-group">
+        <div className="col-sm-5"></div>
+        <button onClick={LoginUser}  type="submit" className="btn btn-primary col-sm-2">Submit</button>
+      </div>
+  </form>
   )
 }

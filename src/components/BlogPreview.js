@@ -6,11 +6,11 @@ import { faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 export default function BlogPreview({id, title, author, avatar, upvote, downvote}) {
 
   return (
-    <div class="col-md-4 col-sm-6 card" style={{width: '18rem', padding: '20px'}}>
-      <img class="card-img-top" src={avatar} alt=""/>
-      <div class="card-body">
-        <h5 class="card-title">{title}</h5>
-        <p class="card-text">Post created by {author.username}</p>
+    <div className="col-md-4 col-sm-6 card" style={{maxWidth: '380px', margin: '15px'}}>
+      <img className="card-img-top" src={avatar} alt=""/>
+      <div className="card-body">
+        <h5 className="card-title">{title}</h5>
+        <p className="card-text">Post created by {author.username}</p>
         <div>
         <button onClick={() => {alert('View this blog to upvote it')}}>
             <FontAwesomeIcon icon={faThumbsUp} />
@@ -20,7 +20,7 @@ export default function BlogPreview({id, title, author, avatar, upvote, downvote
            <FontAwesomeIcon icon={faThumbsDown} />
         </button>{downvote}
       </div>
-        <Link to={`/blogs/${id}`} class="btn btn-primary">Read blog</Link>
+        <Link to={`/blogs/${id}`} className="btn btn-primary">Read blog</Link>
       </div>
     </div>
   )
