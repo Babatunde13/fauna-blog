@@ -16,10 +16,10 @@ export default function HomePage() {
     <div className="">
         <hr/>
       <div className="row">
-        {blogs.length > 0 ? blogs.map(blog => 
+        {blogs.length > 0 ? blogs.map((blog, idx) => 
           <>
              <BlogPreview 
-              key={blog.ref.value.id}
+              key={idx}
               id={blog.ref.value.id}
               title={blog.data.title}
               author={blog.data.author}

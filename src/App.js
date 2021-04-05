@@ -4,7 +4,7 @@ import SignIn from './screens/SignIn'
 import SignUp from './screens/SignUp'
 import NotFound from './screens/NotFound'
 import Blog from './screens/Blog'
-import Markdown from "./markdown";
+import CreateBlog from "./screens/CreateBlog";
 import Navbar from "./components/Navbar";
 
 function App() {
@@ -17,7 +17,7 @@ function App() {
         <Route path="/blogs/:id/" component={Blog} />
         <Route exact path="/signin/" component={SignIn} />
         <Route exact path="/signup/" component={SignUp} />
-        <Route exact path="/create/" component={Markdown} />
+        <Route exact path="/create/" component={CreateBlog} />
         <Route exact path="*" component={NotFound} />
       </Switch>
     </Router>
