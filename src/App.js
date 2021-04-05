@@ -1,4 +1,4 @@
-import "tailwindcss/dist/tailwind.css";
+// import "tailwindcss/dist/tailwind.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HomePage from './screens/HomePage'
 import SignIn from './screens/SignIn'

@@ -1,5 +1,4 @@
 import { useHistory } from "react-router";
-import "../screens/Signin.css";
 
 export default function Signout() {
   const history = useHistory()

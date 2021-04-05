@@ -1,5 +1,5 @@
 // import upvote and downvote icons 
-import {/* useHistory, */ useParams} from 'react-router-dom'
+import { useHistory, useParams} from 'react-router-dom'
 import {useEffect, useState} from 'react'
 import Navbar from '../components/Navbar'
 // import NotFound from './NotFound'
@@ -8,19 +8,17 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import { faThumbsDown, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 
 const Blog = () => {
-  let upvote, downvote
+  const history = useHistory()
   const {id} = useParams()
   const [blogData, setBlogData] = useState({})
 
   const handleUpvote = async e => {
-    upvote = blogData.upvote +1
-    let blog = await upvotePost(upvote, id)
+    let blog = await upvotePost(blogData.upvote+1, id)
     setBlogData(blog)
   }
 
   const handleDownvote = async e => {
-    downvote = blogData.downvote + 1
-    let blog = await downvotePost(downvote, id)
+    let blog = await downvotePost(blogData.downvote+1, id)
     setBlogData(blog)
   }
   // fetch data from the server
@@ -33,8 +31,9 @@ const Blog = () => {
   }, [id, blogData])
 console.log(blogData.author)
   return (
+    {blogData.name === "NotFound" ? 
     <div>
-       <Navbar />
+      <Navbar />
       <h1>{blogData.title}</h1>
       <span className="text-muted">{blogData.author && `Post by ${blogData.author.username}`} on {blogData.created__at}</span>
       <hr/>
@@ -48,10 +47,11 @@ console.log(blogData.author)
         <span style={{margin: "10px"}}></span>
         <button 
           onClick={handleDownvote}>
-           <FontAwesomeIcon icon={faThumbsDown} />
+            <FontAwesomeIcon icon={faThumbsDown} />
         </button>{blogData.downvote}
       </div>
-    </div>
+    </div>: 
+    "Blog not found"}
   )
 }
 
