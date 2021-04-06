@@ -10,6 +10,10 @@ config()
  
 export default function CreateBlog() {
   const history = useHistory()
+  if (!localStorage.getItem('userId')) {
+    alert('You need to be logged in to create a blog!')
+    history.push('/')
+  }
   const [content, setContent] = useState('<h2>Body of your article goes here...</h2>')
   const tags = useRef('')
   const title = useRef('')

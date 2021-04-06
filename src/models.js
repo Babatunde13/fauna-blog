@@ -45,16 +45,18 @@ export const getUser = async (userId) => {
 }
 
 export const loginUser = async (email, password) => {
+ try {
   let userData = await client.query(
     q.Get(
       q.Match(q.Index('user_by_email'), email)
     )
   )
-  if (userData.name && userData.name === "NotFound") return
-  let user = userData.data
-  user.id = userData.ref.value.id
-  if (bcrypt.compareSync(password, user.password)) return user
+  userData.data.id = userData.ref.value.id
+  if (bcrypt.compareSync(password, userData.data.password)) return userData.data
   else return
+ } catch (error) {
+   return
+ }
 }
 
 export const createPost = async (title, body, avatar, authorId, tags) => {
@@ -114,31 +116,43 @@ export const getPosts = async () => {
 }
 
 export const getPost = async id => {
-  let blog = await client.query(
-    q.Get(q.Ref(q.Collection('blogs'), id))
-  )
-  blog.data.id = blog.ref.value.id
-  return blog.data
+  try {
+    let blog = await client.query(
+      q.Get(q.Ref(q.Collection('blogs'), id))
+    )
+    blog.data.id = blog.ref.value.id
+    return blog.data
+  } catch (error) {
+    return
+  }
 }
 
 export const upvotePost = async (upvote, id) => {
-  let blog = await client.query(
-    q.Update(
-      q.Ref(q.Collection('blogs'), id),
-      {data: {upvote}}
+  try {
+    let blog = await client.query(
+      q.Update(
+        q.Ref(q.Collection('blogs'), id),
+        {data: {upvote}}
+      )
     )
-  )
-  blog.data.id = blog.ref.value.id
-  return blog.data
+    blog.data.id = blog.ref.value.id
+    return blog.data
+  } catch  {
+    return
+  }
 }
 
 export const downvotePost = async (downvote, id) => {
-  let blog = await client.query(
+  try {
+    let blog = await client.query(
       q.Update(
         q.Ref(q.Collection('blogs'), id),
         {data: {downvote}}
       )
     )
-  blog.data.id = blog.ref.value.id
-  return blog.data
+    blog.data.id = blog.ref.value.id
+    return blog.data
+  } catch (error) {
+    return
+  }
 }

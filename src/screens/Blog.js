@@ -27,7 +27,7 @@ const Blog = () => {
   }, [id, blogData])
   return (
     <div>
-      <img src={blogData.avatar} width="100%" alt=""/>
+      <img src={blogData.avatar} width="100%" height="400px" alt=""/>
       <h1>{blogData.title}</h1>
       <span className="text-muted">{blogData.author && `Post by ${blogData.author.username}`} on {blogData.created__at}</span>
       <hr/>
@@ -45,7 +45,6 @@ const Blog = () => {
         </button>{blogData.downvote}
       </div>
     </div>
-    // "Blog not found"}
   )
 }
 

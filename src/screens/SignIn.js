@@ -44,7 +44,7 @@ export default function SignIn() {
     </div>
     <div className="form-group">
         <div className="col-sm-5"></div>
-        <button onClick={LoginUser}  type="submit" className="btn btn-primary col-sm-2">Submit</button>
+        <button onClick={LoginUser}  type="submit" className="btn btn-primary col-sm-2">Signin</button>
       </div>
   </form>
   )

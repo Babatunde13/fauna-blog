@@ -17,16 +17,14 @@ export default function HomePage() {
         <hr/>
       <div className="row">
         {blogs.length > 0 ? blogs.map((blog, idx) => 
-          <>
-             <BlogPreview 
-              key={idx}
-              id={blog.ref.value.id}
-              title={blog.data.title}
-              author={blog.data.author}
-              avatar={blog.data.avatar}
-              upvote={blog.data.upvote}
-              downvote={blog.data.downvote}/>
-          </>
+            <BlogPreview 
+            key={idx}
+            id={blog.ref.value.id}
+            title={blog.data.title}
+            author={blog.data.author}
+            avatar={blog.data.avatar}
+            upvote={blog.data.upvote}
+            downvote={blog.data.downvote}/>
         ): 'No blog has been created yet. Be the first to create'}
       </div>
     </div>
