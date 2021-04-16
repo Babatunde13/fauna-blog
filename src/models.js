@@ -86,22 +86,6 @@ export const createPost = async (title, body, avatar, authorId, tags) => {
     )
   )
   data.data.id = data.ref.value.id
-  if (author.blogIds) {
-    client.query(
-      q.Update(
-        q.Ref(q.Collection('users'), authorId), 
-        {data: {blogIds: [data.data.id, ...author.blogIds]}}
-      )
-    )
-  } else {
-    client.query(
-      q.Update(
-        q.Ref(q.Collection('users'), authorId), 
-        {data: {blogIds: [data.data.id]}}
-      )
-    )
-  }
-  data.data.id = data.ref.value.id
   return data.data
 }
 
